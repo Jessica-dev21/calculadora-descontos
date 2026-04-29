@@ -1,4 +1,4 @@
-# calculadora de descontos
+# Calculadora de descontos
 
 Calculadora de planos desenvolvida em HTML, CSS e JavaScript, voltada para facilitar o cálculo de valores finais de mensalidades com aplicação de descontos.
 A ferramenta permite informar o valor do plano, aplicar um desconto manual ou calcular automaticamente o desconto com base na quantidade de dias em que o cliente ficou sem conexão, considerando a diária proporcional (valor do plano dividido por 30 dias).
