@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Calculadora Para Descontos</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: #fff;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+      width: 360px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    button {
+      background: #007bff;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    .secondary {
+      background: #6c757d;
+    }
+
+    .secondary:hover {
+      background: #545b62;
+    }
+
+    .resultado {
+      margin-top: 15px;
+      background: #f1f1f1;
+      padding: 12px;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .historico {
+      margin-top: 10px;
+      font-size: 13px;
+      max-height: 120px;
+      overflow-y: auto;
+      background: #fafafa;
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Calculadora Para Descontos</h2>
+
+  <label>Valor do Plano (R$)</label>
+  <input type="text" id="valorPlano" placeholder="Ex: 89,99">
+
+  <label>Desconto manual (R$) (opcional)</label>
+  <input type="text" id="desconto" placeholder="Ex: 15,00">
+
+  <label>Dias sem conexão</label>
+  <input type="number" id="dias" placeholder="Ex: 5">
+
+  <button onclick="calcular()">Calcular</button>
+  <button class="secondary" onclick="limpar()">Limpar</button>
+
+  <div class="resultado" id="resultado"></div>
+
+  <div class="historico" id="historico"></div>
+</div>
+
+<script>
+  function formatarMoeda(valor) {
+    return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  }
+
+  function converterValor(valor) {
+    return parseFloat(valor.replace(',', '.'));
+  }
+
+  function calcular() {
+    const valorPlano = converterValor(document.getElementById('valorPlano').value);
+    let desconto = converterValor(document.getElementById('desconto').value);
+    const dias = parseInt(document.getElementById('dias').value);
+
+    if (isNaN(valorPlano) || valorPlano <= 0) {
+      resultado.innerHTML = "Informe um valor de plano válido.";
+      return;
+    }
+
+    const diaria = valorPlano / 30;
+
+    // Se não informar desconto manual, usa o proporcional dos dias
+    if (isNaN(desconto) && !isNaN(dias)) {
+      desconto = diaria * dias;
+    }
+
+    desconto = isNaN(desconto) ? 0 : desconto;
+
+    const valorFinal = valorPlano - desconto;
+    const percentual = (desconto / valorPlano) * 100;
+    const valorProporcional = diaria * (isNaN(dias) ? 0 : dias);
+
+    const resultadoTexto = `
+      Valor final: ${formatarMoeda(valorFinal)} | 
+      Desconto: ${formatarMoeda(desconto)} (${percentual.toFixed(2)}%)`;
+
+    document.getElementById('resultado').innerHTML = `
+      <strong>Valor final do plano:</strong> ${formatarMoeda(valorFinal)} <br>
+      <strong>Percentual de desconto:</strong> ${percentual.toFixed(2)}% <br><br>
+      <strong>Diária:</strong> ${formatarMoeda(diaria)} <br>
+      <strong>Desconto por dias:</strong> ${formatarMoeda(valorProporcional)}
+    `;
+
+    adicionarHistorico(resultadoTexto);
+  }
+
+  function adicionarHistorico(texto) {
+    const historico = document.getElementById('historico');
+    const item = document.createElement('div');
+    item.textContent = texto;
+    historico.prepend(item);
+  }
+
+  function limpar() {
+    document.getElementById('valorPlano').value = '';
+    document.getElementById('desconto').value = '';
+    document.getElementById('dias').value = '';
+    document.getElementById('resultado').innerHTML = '';
+  }
+</script>
+
+</body>
+</html>
